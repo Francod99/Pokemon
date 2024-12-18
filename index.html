@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hit N' Collect </title>
+    <meta name="description" content="Descubre las cartas Pokémon más increíbles con Hit N' Collect. Ediciones limitadas y coleccionables exclusivos.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="styles2.css">
+</head>
+<body data-theme="light">
+
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="imagenes/image (5).png" alt="Logo de Hit N' Collect">
+                <span>Hit N' Collect</span>
+            </div>
+    
+            <nav class="nav-menu" id="nav-menu">
+                <a href="cartas.html">Cartas</a>
+                <a href="boosters.html">Boosters</a>
+            </nav>
+    
+            <button id="menu-toggle" class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+    
+            <div class="cart-container">
+                <div class="cart" id="cart-icon">
+                    <img src="imagenes/images-Photoroom.png" alt="Icono de carrito">
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+                <div class="cart-popup" id="cart-popup">
+                    <div class="cart-header">
+                        <h3>Tu Carrito</h3>
+                        <button id="close-cart" class="close-cart">✖</button>
+                    </div>
+                    <div class="cart-items" id="cart-items">
+                        <p class="empty-cart">No hay productos en el carrito</p>
+                    </div>
+                    <div class="cart-footer">
+                        <p><strong>Total:</strong> $<span id="total-price">0.00</span></p>
+                        <div class="cart-buttons">
+                            <button id="clear-cart" class="cart-action">Vaciar Carrito</button>
+                            <button id="checkout" class="cart-action" onclick="redirectToPayment()">Comprar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <section class="promo">
+        <video autoplay muted loop>
+            <source src="imagenes/Diseño sin título (5).mp4" type="video/mp4">
+            Tu navegador no soporta videos.
+        </video>
+        <div class="promo-text">
+            <h1>Descubre las cartas Pokémon más increíbles</h1>
+            <p>Ediciones limitadas, coleccionables exclusivos y más.</p>
+            <a href="cartas.html" class="btn">Ver Productos</a>
+        </div>
+    </section>
+    
+    <main class="main-container">
+        <section class="products" id="products"></section>
+    </main>
+    <audio id="pokemon-music" autoplay loop>
+        <source src="musica/pokemon_red_blue_yellow_opening.mp3.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+    
+    <!-- Controles de la música -->
+    <div class="music-controls">
+        <button id="play-music">▶️ Reproducir Música</button>
+        <button id="pause-music" style="display: none;">⏸️ Pausar Música</button>
+    </div>
+
+    
+    <!-- Botón del Chatbot -->
+    <button id="chatbot-btn">
+        <img src="imagenes/avatars-000155174735-ubw1el-t1080x1080-Photoroom.png" alt="Profesor Oak">
+    </button>
+
+    <!-- Ventana del Chatbot -->
+    <div id="chatbot-window">
+        <div id="chatbot-header">
+            Pokedex Virtual
+            <button id="close-chatbot">✖</button>
+        </div>
+        <div id="chatbot-messages">
+            <div class="message bot">
+                <img src="https://via.placeholder.com/40?text=Oak" alt="Profesor Oak">
+                <span>¡Hola! Soy el Profesor Oak. Bienvenido a Hit N' Collect. Pregúntame sobre precios, métodos de pago, ubicación o disponibilidad de cartas.</span>
+            </div>
+        </div>
+        <div id="chatbot-input">
+            <input type="text" id="chatbot-user-input" placeholder="Escribe tu mensaje aquí...">
+            <button id="chatbot-send">Enviar</button>
+        </div>
+    </div>
+        
+        
+        
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section about">
+                <h3>Hit N' Collect</h3>
+                <p>Descubre las cartas Pokémon más increíbles, ediciones limitadas y coleccionables exclusivos.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="boosters.html">Boosters</a></li>
+                    <li><a href="cartas.html">Cartas</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                    <li><a href="#">Términos y Condiciones</a></li>
+                </ul>
+            </div>
+            <div class="footer-section socials">
+                <h3>Conéctate</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/hitncollect/profilecard/?igsh=OGpxb2RzaWw0dWE5" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section subscribe">
+                <h2>¡No te pierdas las novedades!</h2>
+                <p>Suscríbete y sé el primero en enterarte de las ofertas y nuevas cartas exclusivas.</p>
+                <input type="email" id="email" placeholder="Ingresa tu correo" required>
+                <button onclick="subscribe()">Suscribirse</button>
+                <span id="thank-you-message" style="display:none;">¡Gracias por suscribirte!</span>
+            </div>
+        </div>
+        
+    </footer>
+    
+
+    <script>
+       const navMenu = document.getElementById('nav-menu');
+    const menuToggle = document.getElementById('menu-toggle');
+    menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('show');
+    });
+
+    // EJEMPLO LOGICA CARRITO Y PRODUCTOS (ajusta a lo que tenías antes)
+    const productGrid = document.getElementById("products");
+    const cartIcon = document.getElementById("cart-icon");
+    const cartPopup = document.getElementById("cart-popup");
+    const closeCart = document.getElementById("close-cart");
+    const cartItemsContainer = document.getElementById("cart-items");
+    const totalPriceElement = document.getElementById("total-price");
+    const cartCountElement = document.getElementById("cart-count");
+    const music = document.getElementById("pokemon-music");
+    const playButton = document.getElementById("play-music");
+    const pauseButton = document.getElementById("pause-music");
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const products = Array.from({ length: 12 }, (_, i) => ({
+        id: i + 1,
+        name: `Carta Pokémon ${i + 1}`,
+        price: Math.floor(Math.random() * 100) + 10,
+        type: ["electric", "fire", "water"][Math.floor(Math.random() * 3)],
+        generation: ["kanto", "johto", "hoenn"][Math.floor(Math.random() * 3)],
+        image: "https://via.placeholder.com/300x200",
+        rating: (Math.random() * 5).toFixed(1),
+    }));
+
+    function renderProducts() {
+        if (!productGrid) return;
+        productGrid.innerHTML = "";
+        products.forEach((product) => {
+            const productCard = `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>Generación: ${product.generation}</p>
+                    <p>Tipo: ${product.type}</p>
+                    <p>$${product.price}</p>
+                    <button onclick="addToCart(${product.id})">Agregar al carrito</button>
+                </div>`;
+            productGrid.innerHTML += productCard;
+        });
+    }
+
+    function addToCart(productId) {
+        const product = products.find((p) => p.id === productId);
+        if (!product) return;
+        if (cart.some((item) => item.id === productId)) return;
+        cart.push(product);
+        updateCartUI();
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function updateCartUI() {
+        if (!cartCountElement || !cartItemsContainer || !totalPriceElement) return;
+        cartCountElement.textContent = cart.length;
+        cartItemsContainer.innerHTML = "";
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = `<p class="empty-cart">No hay productos en el carrito</p>`;
+            totalPriceElement.textContent = "0.00";
+            return;
+        }
+
+        let total = 0;
+        cart.forEach((item, index) => {
+            const cartItem = document.createElement("div");
+            cartItem.classList.add("cart-item");
+            cartItem.innerHTML = `
+                <p>${item.name} - $${item.price.toFixed(2)}</p>
+                <button class="remove-item" onclick="removeFromCart(${index})">Eliminar</button>
+            `;
+            cartItemsContainer.appendChild(cartItem);
+            total += item.price;
+        });
+        totalPriceElement.textContent = total.toFixed(2);
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function clearCart() {
+        cart = [];
+        updateCartUI();
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function redirectToPayment() {
+        if (cart.length === 0) {
+            alert("El carrito está vacío.");
+            return;
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        window.location.href = "payment.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const storedCart = JSON.parse(localStorage.getItem('cart'));
+        if (storedCart) {
+            cart = storedCart;
+            updateCartUI();
+        }
+        renderProducts();
+
+        const checkoutButton = document.getElementById("checkout");
+        if (checkoutButton) {
+            checkoutButton.addEventListener("click", redirectToPayment);
+        }
+
+        const clearCartButton = document.getElementById("clear-cart");
+        if (clearCartButton) {
+            clearCartButton.addEventListener("click", clearCart);
+        }
+
+        cartIcon.addEventListener("click", () => {
+            cartPopup.classList.toggle("active");
+        });
+
+        closeCart.addEventListener("click", () => {
+            cartPopup.classList.remove("active");
+        });
+    });
+
+    // Controles de música
+    playButton.addEventListener("click", () => {
+        music.play();
+        playButton.style.display = "none"; 
+        pauseButton.style.display = "inline-block";
+    });
+
+    pauseButton.addEventListener("click", () => {
+        music.pause();
+        pauseButton.style.display = "none";
+        playButton.style.display = "inline-block";
+    });
+
+    music.volume = 0.2;
+
+    function subscribe() {
+        const email = document.getElementById("email").value;
+        if (email) {
+            const thankYouMessage = document.getElementById("thank-you-message");
+            thankYouMessage.style.display = "inline-block"; 
+            document.getElementById("email").value = "";
+            setTimeout(() => {
+                thankYouMessage.style.display = "none";
+            }, 4000);
+        } else {
+            alert("Por favor, ingresa un correo válido.");
+        }
+    }
+
+    // Lógica del Chatbot
+    document.addEventListener("DOMContentLoaded", function() {
+        const chatbotBtn = document.getElementById("chatbot-btn");
+        const chatbotWindow = document.getElementById("chatbot-window");
+        const chatbotSend = document.getElementById("chatbot-send");
+        const chatbotUserInput = document.getElementById("chatbot-user-input");
+        const chatbotMessages = document.getElementById("chatbot-messages");
+        const closeChatbotBtn = document.getElementById('close-chatbot');
+
+        // Datos del chatbot
+        const productosChat = [
+            {nombre: "Pikachu", precio: 500, disponible: true},
+            {nombre: "Charizard", precio: 1000, disponible: false},
+            {nombre: "Bulbasaur", precio: 300, disponible: true}
+        ];
+        const metodosPago = ["Tarjeta de crédito", "Tarjeta de débito", "Transferencia bancaria"];
+        const ubicacion = "Mercedes, Provincia de Buenos Aires";
+
+        function getBotResponse(userMessage) {
+            const msg = userMessage.toLowerCase();
+
+            if (msg.includes("precio") || msg.includes("cuánto")) {
+                let respuesta = "Estos son algunos precios:<br>";
+                productosChat.forEach(p => {
+                    respuesta += `${p.nombre}: $${p.precio} ${p.disponible ? '(Disponible)' : '(Agotado)'}<br>`;
+                });
+                return respuesta;
+            }
+
+            if (msg.includes("pago") || msg.includes("pagar") || msg.includes("método")) {
+                return "Aceptamos: " + metodosPago.join(", ") + ".";
+            }
+
+            if (msg.includes("ubicacion") || msg.includes("están ubicados") || msg.includes("dónde")) {
+                return "Estamos en " + ubicacion + ".";
+            }
+
+            if (msg.includes("pokémon") || msg.includes("productos") || msg.includes("tienen") || msg.includes("disponible")) {
+                let respuesta = "Tenemos las siguientes cartas Pokémon:<br>";
+                productosChat.forEach(p => {
+                    respuesta += `${p.nombre} - ${p.disponible ? "Disponible" : "Agotado"}<br>`;
+                });
+                return respuesta;
+            }
+
+            return null;
+        }
+
+        function processUserMessage(userMessage) {
+            const botMessage = getBotResponse(userMessage);
+            if (botMessage !== null) {
+                setTimeout(() => {
+                    appendMessage(botMessage, 'bot');
+                }, 500);
+            } else {
+                // No entendido
+                setTimeout(() => {
+                    const errorMsg = "No estoy seguro de cómo responder a eso. Prueba preguntarme sobre precios, métodos de pago, ubicación o disponibilidad de cartas.";
+                    appendMessage(errorMsg, 'bot');
+                }, 500);
+            }
+        }
+
+        function sendUserMessage() {
+            const userMessage = chatbotUserInput.value.trim();
+            if (userMessage) {
+                appendMessage(userMessage, 'user');
+                chatbotUserInput.value = "";
+                chatbotUserInput.focus();
+                processUserMessage(userMessage);
+            }
+        }
+
+        function appendMessage(text, sender) {
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("message", sender);
+            if (sender === 'bot') {
+                messageDiv.innerHTML = `<img src="https://via.placeholder.com/40?text=Oak" alt="Profesor Oak"><span>${text}</span>`;
+            } else {
+                messageDiv.innerHTML = `<span>${text}</span>`;
+            }
+            chatbotMessages.appendChild(messageDiv);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            return messageDiv;
+        }
+
+        chatbotBtn.addEventListener("click", function() {
+            if (chatbotWindow.style.display === "none" || chatbotWindow.style.display === "") {
+                chatbotWindow.style.display = "flex";
+            } else {
+                chatbotWindow.style.display = "none";
+            }
+        });
+
+        chatbotSend.addEventListener("click", sendUserMessage);
+        chatbotUserInput.addEventListener("keypress", function(e) {
+            if (e.key === 'Enter') {
+                sendUserMessage();
+            }
+        });
+
+        closeChatbotBtn.addEventListener('click', () => {
+            chatbotWindow.style.display = "none";
+        });
+    });
+    </script>
+</body>
+</html>

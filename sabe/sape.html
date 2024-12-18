@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Test</title>
+    <style>
+        #chatbot-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        #chatbot-btn img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        #chatbot-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: #f3f4f7;
+            border: 2px solid #e74c3c;
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        #chatbot-header {
+            background: #e74c3c;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            font-size: 1.2rem;
+        }
+
+        #chatbot-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .message.bot {
+            background: #e1ecf4;
+            color: #333;
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+        }
+
+        .message.bot img {
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .message.user {
+            background: #e74c3c;
+            color: white;
+            align-self: flex-end;
+        }
+
+        #chatbot-input {
+            display: flex;
+            border-top: 1px solid #e74c3c;
+            padding: 10px;
+            background: white;
+        }
+
+        #chatbot-user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        #chatbot-send {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #chatbot-send:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<button id="chatbot-btn">
+    <img src="https://via.placeholder.com/60?text=Oak" alt="Profesor Oak">
+</button>
+
+<div id="chatbot-window">
+    <div id="chatbot-header">Pokedex Virtual</div>
+    <div id="chatbot-messages">
+        <div class="message bot">
+            <img src="https://via.placeholder.com/40?text=Oak" alt="Profesor Oak">
+            <span>¡Hola! Soy el Profesor Oak. ¿En qué puedo ayudarte hoy?</span>
+        </div>
+    </div>
+    <div id="chatbot-input">
+        <input type="text" id="chatbot-user-input" placeholder="Escribe tu mensaje aquí...">
+        <button id="chatbot-send">Enviar</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const chatbotBtn = document.getElementById("chatbot-btn");
+        const chatbotWindow = document.getElementById("chatbot-window");
+        
+        chatbotBtn.addEventListener("click", function() {
+            if (chatbotWindow.style.display === "none" || chatbotWindow.style.display === "") {
+                chatbotWindow.style.display = "flex";
+            } else {
+                chatbotWindow.style.display = "none";
+            }
+        });
+    });
+</script>
+</body>
+</html>

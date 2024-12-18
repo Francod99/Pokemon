@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Booster Center</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Verdana', sans-serif;
+            background: #f4f4f4;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, #ff0000, #3b4cca);
+            color: white;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #f9d71c;
+        }
+
+        /* Carrito */
+        .cart-container {
+            position: relative;
+        }
+
+        .cart {
+            cursor: pointer;
+        }
+
+        .cart img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: -10px;
+            background: #ff0000;
+            color: white;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        .cart-popup {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 300px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .cart-popup.active {
+            display: block;
+        }
+
+        .cart-popup h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .cart-items {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .cart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-buttons button {
+            background: #3b4cca;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart-buttons button:hover {
+            background: #2a2c89;
+        }
+
+        /* Main Container */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        /* Filters */
+        .filters {
+            background: #3b4cca;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            height: fit-content;
+        }
+
+        .filters h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filters input,
+        .filters select,
+        .filters button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .filters button {
+            background: #ff5733;
+            color: white;
+            cursor: pointer;
+        }
+
+        .filters button:hover {
+            background: #c2342a;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            margin: 5px 0;
+            font-size: 1rem;
+        }
+
+        .card button {
+            background: #3b4cca;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .card button:hover {
+            background: #2a2c89;
+        }
+
+        /* Pagination */
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 10px 20px;
+            border: none;
+            background: #3b4cca;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination button[disabled] {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(to right, #3b4cca, #ff0000);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="imagenes/logo.jpg" alt="Pokémon Logo">
+            <h1>Hit N' Collect</h1>
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="cartas.html">Cartas</a>
+            
+        </nav>
+        <div class="cart-container">
+            <div class="cart" id="cart-icon">
+                <img src="imagenes/cart.png" alt="Carrito">
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+            <div class="cart-popup" id="cart-popup">
+                <h3>Carrito</h3>
+                <div class="cart-items" id="cart-items"></div>
+                <div class="cart-footer">
+                    <p>Total: $<span id="total-price">0.00</span></p>
+                    <div class="cart-buttons">
+                        <button id="clear-cart">Vaciar</button>
+                        <button id="checkout" class="cart-action" onclick="redirectToPayment()">Comprar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="filters">
+                <h2>Filtros</h2>
+                <input type="number" id="price-min" placeholder="Precio desde ($)">
+                <input type="number" id="price-max" placeholder="Precio hasta ($)">
+                <select id="product-type">
+                    <option value="">Tipo de Producto</option>
+                    <option value="Pokemon Sealed">Pokemon Sealed</option>
+                </select>
+                <button id="apply-filters">Aplicar Filtros</button>
+            </div>
+            <div>
+                <div class="cards" id="cards-container"></div>
+                <div class="pagination" id="pagination-container"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Hit N' Collect - Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        const products = Array.from({ length: 40 }, (_, i) => ({
+            id: i + 1,
+            name: `Booster Pokémon ${i + 1}`,
+            price: Math.floor(Math.random() * 470) + 1,
+            type: "Pokemon Sealed",
+            image: `https://via.placeholder.com/300x200?text=Booster+${i + 1}`
+        }));
+
+        let cart = [];
+        let filteredProducts = [...products];
+        let currentPage = 1;
+        const itemsPerPage = 12;
+
+        function renderProducts() {
+            const container = document.getElementById("cards-container");
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = currentPage * itemsPerPage;
+            const visibleProducts = filteredProducts.slice(start, end);
+
+            container.innerHTML = visibleProducts
+                .map(
+                    (product) => `
+                <div class="card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>$${product.price}</p>
+                    <button onclick="addToCart(${product.id})">Agregar al carrito</button>
+                </div>`
+                )
+                .join("");
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const pagination = document.getElementById("pagination-container");
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+            pagination.innerHTML = `
+                <button onclick="changePage(-1)" ${currentPage === 1 ? "disabled" : ""}>Anterior</button>
+                <span>Página ${currentPage} de ${totalPages}</span>
+                <button onclick="changePage(1)" ${currentPage === totalPages ? "disabled" : ""}>Siguiente</button>`;
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            renderProducts();
+        }
+
+        function applyFilters() {
+            const minPrice = parseFloat(document.getElementById("price-min").value) || 0;
+            const maxPrice = parseFloat(document.getElementById("price-max").value) || Infinity;
+            const type = document.getElementById("product-type").value;
+
+            filteredProducts = products.filter(
+                (product) =>
+                    product.price >= minPrice &&
+                    product.price <= maxPrice &&
+                    (!type || product.type === type)
+            );
+
+            currentPage = 1;
+            renderProducts();
+        }
+
+        function addToCart(productId) {
+            const product = products.find((p) => p.id === productId);
+            if (!product) return;
+
+            cart.push(product);
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartCount = document.getElementById("cart-count");
+            const cartItems = document.getElementById("cart-items");
+            const totalPrice = document.getElementById("total-price");
+
+            cartCount.textContent = cart.length;
+
+            cartItems.innerHTML = cart
+                .map(
+                    (item, index) => `
+                <div>
+                    ${item.name} - $${item.price}
+                    <button onclick="removeFromCart(${index})">Eliminar</button>
+                </div>`
+                )
+                .join("");
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            totalPrice.textContent = total.toFixed(2);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCart();
+        }
+
+        document.getElementById("apply-filters").addEventListener("click", applyFilters);
+        document.getElementById("clear-cart").addEventListener("click", clearCart);
+
+        document.getElementById("cart-icon").addEventListener("click", () => {
+            document.getElementById("cart-popup").classList.toggle("active");
+        });
+
+        renderProducts();
+    </script>
+</body>
+</html>

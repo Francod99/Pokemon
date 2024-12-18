@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Card Center</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Verdana', sans-serif;
+            background: #ffffff;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to right, #ff0000, #3b4cca);
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.8rem;
+            text-shadow: 2px 2px 5px #000;
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #f9d71c;
+        }
+
+        /* Carrito */
+.cart-container {
+    position: relative;
+}
+
+.cart {
+    position: relative;
+    cursor: pointer;
+}
+
+.cart img {
+    height: 40px;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: var(--success);
+    color: #ee0909;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 5px 8px;
+    font-size: 0.9rem;
+}
+
+/* Popup del Carrito */
+.cart-popup {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 300px;
+    background: #0c0606;
+    box-shadow: 0 4px 10px rgba(237, 241, 2, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cart-popup.active {
+    display: flex;
+}
+
+.cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cart-header h3 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--highlight);
+}
+
+.cart-items {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px 0;
+}
+
+.cart-items .empty-cart {
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+}
+
+.cart-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.cart-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.cart-action {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #f8f8f4;
+    background: var(--primary);
+    transition: background 0.3s ease;
+}
+
+.cart-action:hover {
+    background: var(--highlight);
+}
+        /* Main Container */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        /* Filters */
+        .filters {
+            background: #3b4cca;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .filters h2 {
+            text-align: center;
+            font-family: 'Arial Black', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .filters select, .filters button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .filters button {
+            background: #ff5733;
+            color: white;
+            cursor: pointer;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .filters button:hover {
+            background: #c2342a;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            padding: 10px 0;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .card button {
+            margin-bottom: 15px;
+            background: #3b4cca;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .card button:hover {
+            background: #2a2c89;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        .pagination button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #3b4cca;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background: #2a2c89;
+        }
+
+        .pagination button[disabled] {
+            background: #ddd;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(to right, #3b4cca, #ff0000);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="imagenes/logo.jpg" alt="Pokémon Logo">
+            <h1>Hit N' Collect</h1>
+        </div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="boosters.html">Boosters</a>
+        </nav>
+        <!-- Carrito -->
+        <div class="cart-container">
+            <div class="cart" id="cart-icon">
+                <img src="imagenes/images.jfif" alt="Carrito">
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+            <div class="cart-popup" id="cart-popup">
+                <div class="cart-header">
+                    <h3>Tu Carrito</h3>
+                    <button id="close-cart" class="close-cart">✖</button>
+                </div>
+                <div class="cart-items" id="cart-items">
+                    <p class="empty-cart">No hay productos en el carrito</p>
+                </div>
+                <div class="cart-footer">
+                    <p><strong>Total:</strong> $<span id="total-price">0.00</span></p>
+                    <div class="cart-buttons">
+                        <button id="clear-cart" class="cart-action">Vaciar Carrito</button>
+                        <button id="checkout" class="cart-action" onclick="redirectToPayment()">Comprar</button>
+
+
+                    </div>
+    
+           
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Filters -->
+        <div class="filters">
+            <h2>Busca tu carta</h2>
+            <form id="filter-form">
+                <select id="type-filter">
+                    <option value="">Seleccionar Tipo</option>
+                    <option value="Water">💧 Agua</option>
+                    <option value="Fire">🔥 Fuego</option>
+                    <option value="Rock">🪨 Roca</option>
+                    <option value="Electric">⚡ Rayo</option>
+                    <option value="Dark">🌑 Siniestro</option>
+                    <option value="Poison">☠️ Veneno</option>
+                    <option value="Fairy">✨ Hada</option>
+                    <option value="Bug">🐞 Bicho</option>
+                    <option value="Dragon">🐉 Dragón</option>
+                    <option value="Fighting">🥊 Lucha</option>
+                    <option value="Flying">🌬️ Volador</option>
+                    <option value="Ghost">👻 Fantasma</option>
+                    <option value="Grass">🌱 Planta</option>
+                    <option value="Ground">⛰️ Tierra</option>
+                    <option value="Ice">❄️ Hielo</option>
+                    <option value="Normal">🔵 Normal</option>
+                    <option value="Psychic">🔮 Psíquico</option>
+                    <option value="Steel">⚙️ Acero</option>
+                    <option value="Trainer">🎓 Entrenador</option>
+                </select>
+                <select id="set-filter">
+                    <option value="">Seleccionar Set</option>
+                    <option value="Scarlet & Violet: Base">Scarlet & Violet: Base</option>
+                    <option value="Sword and Shield">Sword and Shield</option>
+                    <option value="Silver Tempest">Silver Tempest</option>
+                    <option value="Lost Origin">Lost Origin</option>
+                    <option value="Pokemon GO">Pokemon GO</option>
+                    <option value="Astral Radiance">Astral Radiance</option>
+                </select>
+                <button type="button" id="filter-btn">Aplicar Filtro</button>
+                <button type="button" id="reset-btn">Resetear Filtros</button>
+            </form>
+        </div>
+
+        <!-- Cards -->
+        <div>
+            <div class="cards" id="cards-container"></div>
+            <div class="pagination" id="pagination-container">
+                <button id="prev-page" disabled>&laquo; Anterior</button>
+                <span id="page-indicator">Página 1</span>
+                <button id="next-page">&raquo; Siguiente</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>¡Atrápalos todos! 🎴</p>
+        <p>Hit N' Collect - Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        // Variables globales
+const types = [
+    "Water", "Fire", "Rock", "Electric", "Dark", "Poison", "Fairy", "Bug", "Dragon",
+    "Fighting", "Flying", "Ghost", "Grass", "Ground", "Ice", "Normal", "Psychic",
+    "Steel", "Trainer"
+];
+const sets = [
+    "Scarlet & Violet: Base", "Sword and Shield", "Silver Tempest", "Lost Origin", 
+    "Pokemon GO", "Astral Radiance"
+];
+
+const products = Array.from({ length: 102 }, (_, i) => ({
+    id: i + 1,
+    name: `Carta Pokémon ${i + 1}`,
+    price: Math.floor(Math.random() * 100) + 10,
+    type: types[Math.floor(Math.random() * types.length)],
+    set: sets[Math.floor(Math.random() * sets.length)],
+    image: `https://via.placeholder.com/300x200?text=Carta+${i + 1}`
+}));
+
+let filteredProducts = [...products];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let currentPage = 1;
+const itemsPerPage = 12;
+
+// Funciones del carrito
+function addToCart(productId) {
+    const product = products.find((p) => p.id === productId);
+    if (!product) return;
+
+    if (cart.some((item) => item.id === productId)) {
+        alert("El producto ya está en el carrito.");
+        return;
+    }
+
+    cart.push(product);
+    updateCartUI();
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartUI();
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function clearCart() {
+    cart = [];
+    updateCartUI();
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function updateCartUI() {
+    const cartCountElement = document.getElementById("cart-count");
+    const cartItemsContainer = document.getElementById("cart-items");
+    const totalPriceElement = document.getElementById("total-price");
+
+    cartCountElement.textContent = cart.length;
+    cartItemsContainer.innerHTML = cart.length
+        ? cart
+              .map(
+                  (item, index) => `
+            <div class="cart-item">
+                <p>${item.name} - $${item.price.toFixed(2)}</p>
+                <button class="remove-item" onclick="removeFromCart(${index})">Eliminar</button>
+            </div>
+        `
+              )
+              .join("")
+        : `<p class="empty-cart">No hay productos en el carrito</p>`;
+
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    totalPriceElement.textContent = total.toFixed(2);
+}
+
+function redirectToPayment() {
+    if (cart.length === 0) {
+        alert("El carrito está vacío.");
+        return;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Redirigiendo a la página de pago...");
+}
+
+// Funciones de productos y filtros
+function renderPage(page) {
+    const container = document.getElementById("cards-container");
+    container.innerHTML = "";
+    const start = (page - 1) * itemsPerPage;
+    const end = page * itemsPerPage;
+
+    filteredProducts.slice(start, end).forEach((product) => {
+        const card = `
+            <div class="card">
+                <img src="${product.image}" alt="${product.name}">
+                <div class="card-content">
+                    <h3>${product.name}</h3>
+                    <p>Tipo: ${product.type}</p>
+                    <p>Set: ${product.set}</p>
+                    <p>$${product.price}</p>
+                    <button onclick="addToCart(${product.id})">Agregar al carrito</button>
+                </div>
+            </div>
+        `;
+        container.innerHTML += card;
+    });
+
+    const prevButton = document.getElementById("prev-page");
+    const nextButton = document.getElementById("next-page");
+    const pageIndicator = document.getElementById("page-indicator");
+
+    prevButton.disabled = page === 1;
+    nextButton.disabled = page === Math.ceil(filteredProducts.length / itemsPerPage);
+    pageIndicator.textContent = `Página ${page}`;
+}
+
+function applyFilters() {
+    const typeFilter = document.getElementById("type-filter").value;
+    const setFilter = document.getElementById("set-filter").value;
+
+    filteredProducts = products.filter(
+        (product) =>
+            (!typeFilter || product.type === typeFilter) &&
+            (!setFilter || product.set === setFilter)
+    );
+
+    currentPage = 1;
+    renderPage(currentPage);
+}
+
+function resetFilters() {
+    filteredProducts = [...products];
+    document.getElementById("type-filter").value = "";
+    document.getElementById("set-filter").value = "";
+    currentPage = 1;
+    renderPage(currentPage);
+}
+
+// Inicializar página
+document.addEventListener("DOMContentLoaded", () => {
+    renderPage(currentPage);
+    updateCartUI();
+
+    // Eventos de botones
+    document.getElementById("filter-btn").addEventListener("click", applyFilters);
+    document.getElementById("reset-btn").addEventListener("click", resetFilters);
+
+    document.getElementById("prev-page").addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage(currentPage);
+        }
+    });
+
+    document.getElementById("next-page").addEventListener("click", () => {
+        if (currentPage < Math.ceil(filteredProducts.length / itemsPerPage)) {
+            currentPage++;
+            renderPage(currentPage);
+        }
+    });
+
+    document.getElementById("clear-cart").addEventListener("click", clearCart);
+    document.getElementById("checkout").addEventListener("click", redirectToPayment);
+
+    const cartIcon = document.getElementById("cart-icon");
+    const cartPopup = document.getElementById("cart-popup");
+    const closeCart = document.getElementById("close-cart");
+
+    cartIcon.addEventListener("click", () => cartPopup.classList.toggle("active"));
+    closeCart.addEventListener("click", () => cartPopup.classList.remove("active"));
+});
+// Función para redirigir a la página de pago
+function redirectToPayment() {
+    if (cart.length === 0) {
+        alert("El carrito está vacío.");
+        return;
+    }
+
+    // Guardar el carrito en localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // Redirigir a la página de opciones de pago
+    window.location.href = "payment.html"; // Reemplaza "payment.html" con la ruta de tu archivo HTML de opciones de pago
+}
+
+    </script>
+</body>
+</html>
